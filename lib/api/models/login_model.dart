@@ -9,6 +9,8 @@ class LoginModel {
     this.error,
   });
 
+  bool get hasError => error != null;
+
   String get getError {
     if (error?.error == "Http status error [404]") {
       return "Login: User not found";

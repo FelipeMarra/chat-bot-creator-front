@@ -17,8 +17,8 @@ class UserAPI {
     _userBox = await Hive.openBox("user");
   }
 
-  String? get name => _user?.name;
-  String? get email => _user?.email;
+  String get name => _user!.name;
+  String get email => _user!.email;
   bool get isAutheticated => _userBox.get("accessToken") == null ? false : true;
 
   //###################### Create #################################
@@ -39,7 +39,7 @@ class UserAPI {
       return UserModel(name: "", email: "", id: -1, accessToken: "", error: e);
     }
 
-    await _loginService.getToken(email, password);
+    LoginModel login = await _loginService.getToken(email, password);
 
     UserModel user = await getUserByEmail(email);
 
@@ -47,25 +47,31 @@ class UserAPI {
       return user;
     }
 
-    await setUser(user: user);
+    await setUser(user: user, accessToken: login.accessToken);
 
     return _user!;
   }
 
   //###################### Get #################################
   Future<LoginModel> getToken(email, password) async {
-    print("PEGANDO TOKEN");
     return await _loginService.getToken(email, password);
   }
 
   Future<UserModel> setUser({
     UserModel? user,
     String? email,
-    String? accessToken,
+    required String accessToken,
   }) async {
     if (user == null) {
-      print("PEGANDO USER POR EMAIL");
-      _user = await getUserByEmail(email ?? "");
+      UserModel userRes = await getUserByEmail(email!);
+      //if ther is an error, return withoue setting
+      if (userRes.hasError) {
+        return userRes;
+      } else {
+        _user = userRes;
+      }
+    } else {
+      _user = user;
     }
 
     await _userBox.put("name", _user!.name);
@@ -76,7 +82,6 @@ class UserAPI {
     return _user!;
   }
 
-//TODO
   Future<UserModel> getCurrentUser() async {
     try {
       var res = await _dio.get("/user/current");

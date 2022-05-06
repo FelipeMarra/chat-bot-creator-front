@@ -1,11 +1,11 @@
 import 'package:chat_bot_creator/api/api.dart';
 import 'package:chat_bot_creator/api/models/login_model.dart';
+import 'package:chat_bot_creator/api/models/user_model.dart';
 import 'package:chat_bot_creator/api/user_api.dart';
 import 'package:chat_bot_creator/src/home/home_page.dart';
 import 'package:chat_bot_creator/src/registration/registration_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 
 class LoginPage extends StatelessWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -88,20 +88,30 @@ class LoginPage extends StatelessWidget {
                       LoginModel loginModel =
                           await _userAPI.getToken(_email, _password);
 
-                      if (loginModel.error != null) {
+                      if (loginModel.hasError) {
                         _showDialog(
                           context,
-                          "Ops! Something wrong is not right...",
+                          "Ops! Something wrong is not right: Trying to get token...",
                           loginModel.getError,
                         );
 
                         return;
                       }
 
-                      await _userAPI.setUser(
+                      UserModel userSetted = await _userAPI.setUser(
                         email: _email,
                         accessToken: loginModel.accessToken,
                       );
+
+                      if (userSetted.hasError) {
+                        _showDialog(
+                          context,
+                          "Ops! Something wrong is not right: trying to set user...",
+                          userSetted.getError,
+                        );
+
+                        return;
+                      }
 
                       Navigator.push(
                         context,

@@ -17,8 +17,6 @@ class UserModel {
     this.error,
   });
 
-
-
   Map<String, dynamic> toMap() {
     return {
       'name': name,
@@ -27,6 +25,8 @@ class UserModel {
       'id': id,
     };
   }
+
+  bool get hasError => error != null;
 
   String get getError {
     if (error?.error == "Http status error [403]") {
@@ -49,5 +49,6 @@ class UserModel {
 
   String toJson() => json.encode(toMap());
 
-  factory UserModel.fromJson(String source) => UserModel.fromMap(json.decode(source));
+  factory UserModel.fromJson(String source) =>
+      UserModel.fromMap(json.decode(source));
 }

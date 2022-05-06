@@ -5,7 +5,7 @@ import 'package:flutter/cupertino.dart';
 
 class API extends ChangeNotifier {
   //static const baseUrl = "https://chat-bot-creator-back.herokuapp.com";
-  static const baseUrl = "http://127.0.0.1:8000/";
+  static const baseUrl = "http://127.0.0.1:8000";
   late Dio _dio;
   late LoginService _loginService;
   late UserAPI user;

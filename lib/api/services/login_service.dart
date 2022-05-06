@@ -15,7 +15,7 @@ class LoginService {
     _userBox = await Hive.openBox("user");
 
     _oauth = OAuth(
-      tokenUrl: "$baseUrl/login",
+      tokenUrl: "$baseUrl/login/",
       clientId: '',
       clientSecret: '',
       storage: OAuthSecureStorage(_userBox),
@@ -25,7 +25,7 @@ class LoginService {
   }
 
   Future<LoginModel> getToken(email, password) async {
-    String accessToken = "";
+    String? accessToken;
     try {
       OAuthToken token = await _oauth.requestTokenAndSave(
         PasswordGrant(
@@ -34,11 +34,15 @@ class LoginService {
         ),
       );
 
-      accessToken = token.accessToken ?? "";
+      accessToken = token.accessToken;
+
+      if (accessToken == null) {
+        throw Exception("ACCESS TOKEN IS NULL");
+      }
 
       return LoginModel(accessToken: accessToken);
     } on DioError catch (e) {
-      return LoginModel(accessToken: accessToken, error: e);
+      return LoginModel(accessToken: accessToken ?? "", error: e);
     }
   }
 }
