@@ -2,17 +2,19 @@ import 'package:chat_bot_creator/api/api.dart';
 import 'package:chat_bot_creator/api/models/login_model.dart';
 import 'package:chat_bot_creator/api/models/user_model.dart';
 import 'package:chat_bot_creator/api/user_api.dart';
+import 'package:chat_bot_creator/src/get_it_locator.dart';
 import 'package:chat_bot_creator/src/home/home_page.dart';
 import 'package:chat_bot_creator/src/registration/registration_page.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({Key? key}) : super(key: key);
 
+  static const routeName = "login_page";
+
   @override
   Widget build(BuildContext context) {
-    UserAPI _userAPI = context.read<API>().user;
+    UserAPI _userAPI = locator.get<API>().user;
 
     GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -113,12 +115,7 @@ class LoginPage extends StatelessWidget {
                         return;
                       }
 
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => const HomePage(),
-                        ),
-                      );
+                      Navigator.of(context).popAndPushNamed(HomePage.routeName);
                     },
                     child: const Text(
                       "Login",
@@ -128,11 +125,8 @@ class LoginPage extends StatelessWidget {
                   const SizedBox(width: 50),
                   OutlinedButton(
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => const RegistrationPage(),
-                        ),
+                      Navigator.of(context).popAndPushNamed(
+                        RegistrationPage.routeName,
                       );
                     },
                     child: const Text(

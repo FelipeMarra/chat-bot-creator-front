@@ -17,9 +17,10 @@ class UserAPI {
     _userBox = await Hive.openBox("user");
   }
 
-  String get name => _user!.name;
-  String get email => _user!.email;
+  String? get name => _user?.name;
+  String? get email => _user?.email;
   bool get isAutheticated => _userBox.get("accessToken") == null ? false : true;
+  static const String userRout = "/creator_user";
 
   //###################### Create #################################
   Future<UserModel> createUser(
@@ -34,7 +35,7 @@ class UserAPI {
     );
 
     try {
-      await _dio.post("/user/create", data: regData.toMap());
+      await _dio.post("$userRout/create", data: regData.toMap());
     } on DioError catch (e) {
       return UserModel(name: "", email: "", id: -1, accessToken: "", error: e);
     }
@@ -84,7 +85,7 @@ class UserAPI {
 
   Future<UserModel> getCurrentUser() async {
     try {
-      var res = await _dio.get("/user/current");
+      var res = await _dio.get("$userRout/current");
       return UserModel.fromMap(res.data);
     } on DioError catch (e) {
       return UserModel(name: "", email: "", id: -1, accessToken: "", error: e);
@@ -93,7 +94,7 @@ class UserAPI {
 
   Future<UserModel> getUserByEmail(String email) async {
     try {
-      var res = await _dio.get("/user/by_email/$email");
+      var res = await _dio.get("$userRout/by_email/$email");
       return UserModel.fromMap(res.data);
     } on DioError catch (e) {
       return UserModel(name: "", email: "", id: -1, accessToken: "", error: e);

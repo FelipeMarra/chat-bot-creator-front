@@ -1,31 +1,39 @@
 import 'package:chat_bot_creator/api/api.dart';
+import 'package:chat_bot_creator/src/get_it_locator.dart';
 import 'package:chat_bot_creator/src/home/home_page.dart';
 import 'package:chat_bot_creator/src/login/login_page.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-
-class LandingPage extends StatelessWidget {
+class LandingPage extends StatefulWidget {
   const LandingPage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    API _api = context.watch<API>();
-    Widget? child;
+  State<LandingPage> createState() => _LandingPageState();
+}
 
-    //TODO not getting autentication afeter registration
-    if (_api.initiated) {
+class _LandingPageState extends State<LandingPage> {
+  @override
+  void initState() {
+    API _api = locator.get<API>();
+
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
+      await _api.init();
+
       if (_api.user.isAutheticated) {
-        child = const HomePage();
+        Navigator.of(context).popAndPushNamed(HomePage.routeName);
       } else {
-        child = const LoginPage();
+        Navigator.of(context).popAndPushNamed(LoginPage.routeName);
       }
-    } else {
-      child = const Center(child: CircularProgressIndicator());
-    }
+    });
+    super.initState();
+  }
 
-    return Scaffold(
-      body: child,
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(
+      body: Center(
+        child: CircularProgressIndicator(),
+      ),
     );
   }
 }

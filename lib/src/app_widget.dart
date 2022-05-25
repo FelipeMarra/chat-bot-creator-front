@@ -1,7 +1,9 @@
-import 'package:chat_bot_creator/api/api.dart';
+import 'package:chat_bot_creator/src/chatbot/chatbot_page.dart';
+import 'package:chat_bot_creator/src/home/home_page.dart';
 import 'package:chat_bot_creator/src/landing_page.dart';
+import 'package:chat_bot_creator/src/login/login_page.dart';
+import 'package:chat_bot_creator/src/registration/registration_page.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 
 class MyApp extends StatelessWidget {
@@ -9,17 +11,18 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (context) => API()),
-      ],
-      child: MaterialApp(
-        title: 'Chat Bot',
-        theme: ThemeData(
-          primarySwatch: Colors.grey,
-        ),
-        home: const LandingPage(),
+    return MaterialApp(
+      title: 'Chat Bot',
+      theme: ThemeData(
+        primarySwatch: Colors.grey,
       ),
+      routes: {
+        "/": (context) => const LandingPage(),
+        LoginPage.routeName: (context) => const LoginPage(),
+        RegistrationPage.routeName: (context) => const RegistrationPage(),
+        HomePage.routeName: (context) => const HomePage(),
+        ChatbotPage.routeName: (context) => ChatbotPage(ModalRoute.of(context)!.settings.arguments as ChatbotPageArguments),
+      },
     );
   }
 }
