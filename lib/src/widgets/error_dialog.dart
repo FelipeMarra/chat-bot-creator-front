@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 showErrorDialog(context, String title, String message) {
   showDialog(
@@ -9,7 +10,7 @@ showErrorDialog(context, String title, String message) {
       actions: [
         OutlinedButton(
           onPressed: () {
-            Navigator.pop(context);
+            Get.back();
           },
           child: const Text("Ok"),
         ),

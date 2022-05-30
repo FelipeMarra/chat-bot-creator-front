@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 
 class TitleWidget extends StatefulWidget {
-  const TitleWidget({Key? key}) : super(key: key);
+  final String initialName;
+  const TitleWidget(
+    this.initialName, {
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<TitleWidget> createState() => _TitleWidgetState();
@@ -9,7 +13,13 @@ class TitleWidget extends StatefulWidget {
 
 class _TitleWidgetState extends State<TitleWidget> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  String _name = "";
+  late String _name;
+
+  @override
+  void initState() {
+    _name = widget.initialName;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -1,8 +1,6 @@
 import 'package:chat_bot_creator/api/api.dart';
-import 'package:chat_bot_creator/src/get_it_locator.dart';
-import 'package:chat_bot_creator/src/home/home_page.dart';
-import 'package:chat_bot_creator/src/login/login_page.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class LandingPage extends StatefulWidget {
   const LandingPage({Key? key}) : super(key: key);
@@ -12,17 +10,17 @@ class LandingPage extends StatefulWidget {
 }
 
 class _LandingPageState extends State<LandingPage> {
+  final API _api = Get.put<API>(API());
+
   @override
   void initState() {
-    API _api = locator.get<API>();
-
     WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
       await _api.init();
 
       if (_api.user.isAutheticated) {
-        Navigator.of(context).popAndPushNamed(HomePage.routeName);
+        Get.toNamed("/home_page");
       } else {
-        Navigator.of(context).popAndPushNamed(LoginPage.routeName);
+        Get.toNamed("/login_page");
       }
     });
     super.initState();

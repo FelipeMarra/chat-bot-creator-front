@@ -1,8 +1,8 @@
 import 'package:chat_bot_creator/api/api.dart';
 import 'package:chat_bot_creator/api/chat_bot_api.dart';
+import 'package:chat_bot_creator/src/home/home_page_controller.dart';
 import 'package:flutter/material.dart';
-
-import '../../get_it_locator.dart';
+import 'package:get/get.dart';
 
 class NewChatbotWidget extends StatefulWidget {
   const NewChatbotWidget({Key? key}) : super(key: key);
@@ -12,12 +12,13 @@ class NewChatbotWidget extends StatefulWidget {
 }
 
 class _NewChatbotWidgetState extends State<NewChatbotWidget> {
+  final HomePageController _controller = Get.find();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   String _name = "";
 
   @override
   Widget build(BuildContext context) {
-    ChatBotAPI _chatbotAPI = locator.get<API>().chatbot;
+    ChatBotAPI _chatbotAPI = Get.find<API>().chatbot;
 
     return Dialog(
       child: Form(
@@ -59,14 +60,16 @@ class _NewChatbotWidgetState extends State<NewChatbotWidget> {
 
                       await _chatbotAPI.createChatBot(_name);
 
-                      Navigator.pop(context);
+                      _controller.newChatStatus = "created"; 
+                      Get.back();
                     },
                     child: const Text("Create"),
                   ),
                   const SizedBox(width: 15),
                   OutlinedButton(
                     onPressed: () {
-                      Navigator.pop(context);
+                      _controller.newChatStatus = "canceled";
+                      Get.back();
                     },
                     child: const Text("Cancel"),
                   ),

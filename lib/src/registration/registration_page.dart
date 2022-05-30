@@ -2,18 +2,18 @@
 import 'package:chat_bot_creator/api/api.dart';
 import 'package:chat_bot_creator/api/models/user_model.dart';
 import 'package:chat_bot_creator/api/user_api.dart';
-import 'package:chat_bot_creator/src/get_it_locator.dart';
 import 'package:chat_bot_creator/src/home/home_page.dart';
 import 'package:chat_bot_creator/src/login/login_page.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class RegistrationPage extends StatelessWidget {
   const RegistrationPage({Key? key}) : super(key: key);
-  static const routeName = "registration_page";
+  static const routeName = "/registration_page";
 
   @override
   Widget build(BuildContext context) {
-    UserAPI _userAPI = locator.get<API>().user;
+    UserAPI _userAPI = Get.find<API>().user;
 
     GlobalKey<FormState> _formKey = GlobalKey<FormState>();
     String _name = "";
@@ -82,8 +82,7 @@ class RegistrationPage extends StatelessWidget {
         elevation: 0,
         leading: BackButton(
           color: Colors.black,
-          onPressed: () =>
-              Navigator.of(context).popAndPushNamed(LoginPage.routeName),
+          onPressed: () => Get.offNamed("/login_page"),
         ),
       ),
       body: Form(
@@ -124,7 +123,7 @@ class RegistrationPage extends StatelessWidget {
                         return;
                       }
 
-                      Navigator.of(context).popAndPushNamed(HomePage.routeName);
+                      Get.offNamed("/home_page");
                     },
                     child: const Text(
                       "Criar",
@@ -149,7 +148,7 @@ class RegistrationPage extends StatelessWidget {
         actions: [
           OutlinedButton(
             onPressed: () {
-              Navigator.pop(context);
+              Get.back();
             },
             child: const Text("Ok"),
           ),

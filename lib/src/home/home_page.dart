@@ -3,33 +3,37 @@ import 'package:chat_bot_creator/api/chat_bot_api.dart';
 import 'package:chat_bot_creator/api/models/chat_model.dart';
 import 'package:chat_bot_creator/api/user_api.dart';
 import 'package:chat_bot_creator/src/chatbot/chatbot_page.dart';
-import 'package:chat_bot_creator/src/get_it_locator.dart';
+import 'package:chat_bot_creator/src/home/home_page_controller.dart';
 import 'package:chat_bot_creator/src/home/widgets/new_chatbot_widget.dart';
 import 'package:chat_bot_creator/src/widgets/error_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
-  static const routeName = "home_page";
+  static const routeName = "/home_page";
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
+  final HomePageController _controller = Get.put(HomePageController());
   List<ChatBotModel> chats = [];
 
   @override
   Widget build(BuildContext context) {
-    UserAPI _userAPI = locator.get<API>().user;
-    ChatBotAPI _chatbotAPI = locator.get<API>().chatbot;
+    UserAPI _userAPI = Get.find<API>().user;
+    ChatBotAPI _chatbotAPI = Get.find<API>().chatbot;
 
     if (chats.isEmpty) {
       _chatbotAPI.getAll().then((value) {
-        setState(() {
-          chats = value;
-        });
+        if (mounted) {
+          setState(() {
+            chats = value;
+          });
+        }
       });
     }
 
@@ -50,6 +54,10 @@ class _HomePageState extends State<HomePage> {
                   itemCount: chats.length,
                   itemBuilder: (context, index) {
                     return ListTile(
+                      onTap: () => Get.toNamed(
+                        "/chat_page",
+                        arguments: ChatbotPageArguments(index + 1),
+                      ),
                       leading: const Icon(Icons.chat),
                       title: Text(chats[index].name),
                       subtitle: Column(
@@ -103,11 +111,13 @@ class _HomePageState extends State<HomePage> {
       context: context,
       barrierDismissible: false,
       builder: (context) => const NewChatbotWidget(),
-    ).then((value) {
-      Navigator.of(context).popAndPushNamed(
-        ChatbotPage.routeName,
-        arguments: ChatbotPageArguments(chats.length + 1),
-      );
+    ).then((_) {
+      if (_controller.newChatStatus == "created") {
+        Get.toNamed(
+          "/chat_page",
+          arguments: ChatbotPageArguments(chats.length + 1),
+        );
+      }
     });
   }
 }
