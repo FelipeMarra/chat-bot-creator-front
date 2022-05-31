@@ -1,4 +1,7 @@
+import 'package:chat_bot_creator/api/api.dart';
+import 'package:chat_bot_creator/api/chat_bot_api.dart';
 import 'package:chat_bot_creator/src/chatbot/widgets/title_widget.dart';
+import 'package:chat_bot_creator/src/widgets/error_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'controller/chat_bot_page_controller.dart';
@@ -19,7 +22,9 @@ class ChatBotPage extends StatefulWidget {
 }
 
 class _ChatBotPageState extends State<ChatBotPage> {
+  final ChatBotAPI _chatbotAPI = Get.find<API>().chatbot;
   final ChatBotPageController _controller = Get.put(ChatBotPageController());
+  final TextEditingController nameController = TextEditingController();
 
   @override
   void initState() {
@@ -29,26 +34,47 @@ class _ChatBotPageState extends State<ChatBotPage> {
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController nameController = TextEditingController();
-
     return Scaffold(
       appBar: AppBar(
-        title: Obx(() {
-          nameController.text = _controller.chatBotModel.value.name;
-          return TitleWidget(
-            textController: nameController,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return "Required Field";
+        title: _titleWidget(),
+        actions: [
+          IconButton(
+            onPressed: () async {
+              String res = await _chatbotAPI.delete(widget.arguments.id);
+
+              if (res != "200 OK") {
+                showErrorDialog(
+                  context,
+                  "Error Trying To Delete ChatBot ${widget.arguments.id}:",
+                  res,
+                );
+                return;
               }
-              return null;
+
+              Get.back();
             },
-            onChange: (newName) => _controller.setChatBotName(newName),
-          );
-        }),
+            icon: const Icon(Icons.delete),
+          ),
+        ],
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
     );
+  }
+
+  Obx _titleWidget() {
+    return Obx(() {
+      nameController.text = _controller.chatBotModel.value.name;
+      return TitleWidget(
+        textController: nameController,
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return "Required Field";
+          }
+          return null;
+        },
+        onChange: (newName) => _controller.setChatBotName(newName),
+      );
+    });
   }
 }

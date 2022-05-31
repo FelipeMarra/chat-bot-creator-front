@@ -1,6 +1,7 @@
 import 'package:chat_bot_creator/api/api.dart';
 import 'package:chat_bot_creator/api/chat_bot_api.dart';
-import 'package:chat_bot_creator/src/home/home_page_controller.dart';
+import 'package:chat_bot_creator/api/models/chat_model.dart';
+import 'package:chat_bot_creator/src/chatbot/chatbot_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -12,7 +13,6 @@ class NewChatbotWidget extends StatefulWidget {
 }
 
 class _NewChatbotWidgetState extends State<NewChatbotWidget> {
-  final HomePageController _controller = Get.find();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   String _name = "";
 
@@ -58,9 +58,14 @@ class _NewChatbotWidgetState extends State<NewChatbotWidget> {
 
                       _formKey.currentState?.save();
 
-                      _controller.model = await _chatbotAPI.createChatBot(_name);
+                      ChatBotModel model =
+                          await _chatbotAPI.createChatBot(_name);
 
-                      Get.back();
+                      Get.offAllNamed(
+                        "/chat_page",
+                        predicate: (route) => Get.currentRoute == "/home_page",
+                        arguments: ChatbotPageArguments(model.id),
+                      );
                     },
                     child: const Text("Create"),
                   ),

@@ -1,3 +1,4 @@
+import 'package:chat_bot_creator/api/api.dart';
 import 'package:chat_bot_creator/src/chatbot/chatbot_page.dart';
 import 'package:chat_bot_creator/src/home/home_page.dart';
 import 'package:chat_bot_creator/src/landing_page.dart';
@@ -11,6 +12,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // ignore: unused_local_variable
+    final API _api = Get.put<API>(API());
+
     return GetMaterialApp(
       title: 'Chat Bot',
       theme: ThemeData(

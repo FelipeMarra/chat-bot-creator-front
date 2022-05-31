@@ -17,18 +17,11 @@ class ChatBotPageController extends GetxController {
 
   void setChatBotName(String newName) {
     _chatBotModel.value.name = newName;
-    print(_chatBotModel.value.name);
-    // _chatBotModel.update(
-    //   (model) {
-    //     model!.name = newName;
-    //   },
-    // );
   }
 
   Future<Rx<ChatBotModel>> init(int id) async {
     ChatBotModel newModel = await _chatbotAPI.getById(id);
     _chatBotModel(newModel);
-    print("Pegamo o ${_chatBotModel.value.name}");
     return _chatBotModel;
   }
 }

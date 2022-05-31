@@ -10,7 +10,7 @@ class LandingPage extends StatefulWidget {
 }
 
 class _LandingPageState extends State<LandingPage> {
-  final API _api = Get.put<API>(API());
+  final API _api = Get.find<API>();
 
   @override
   void initState() {

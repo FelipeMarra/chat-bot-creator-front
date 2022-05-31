@@ -47,8 +47,6 @@ class ChatBotAPI {
       chatbotRout + "/delete/$id",
     );
 
-    print(res.data);
-
     return res.data;
   }
 }

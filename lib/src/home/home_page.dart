@@ -3,9 +3,7 @@ import 'package:chat_bot_creator/api/chat_bot_api.dart';
 import 'package:chat_bot_creator/api/models/chat_model.dart';
 import 'package:chat_bot_creator/api/user_api.dart';
 import 'package:chat_bot_creator/src/chatbot/chatbot_page.dart';
-import 'package:chat_bot_creator/src/home/home_page_controller.dart';
 import 'package:chat_bot_creator/src/home/widgets/new_chatbot_widget.dart';
-import 'package:chat_bot_creator/src/widgets/error_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -19,14 +17,12 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final HomePageController _controller = Get.put(HomePageController());
+  final UserAPI _userAPI = Get.find<API>().user;
+  final ChatBotAPI _chatbotAPI = Get.find<API>().chatbot;
   List<ChatBotModel> chats = [];
 
   @override
   Widget build(BuildContext context) {
-    UserAPI _userAPI = Get.find<API>().user;
-    ChatBotAPI _chatbotAPI = Get.find<API>().chatbot;
-
     if (chats.isEmpty) {
       _chatbotAPI.getAll().then((value) {
         if (mounted) {
@@ -69,32 +65,6 @@ class _HomePageState extends State<HomePage> {
                           Text("Share Link: ${chats[index].shareLink}")
                         ],
                       ),
-                      trailing: Wrap(
-                        spacing: 12, // space between two icons
-                        children: <Widget>[
-                          //TODO MOVER DAQUI PARA PAGINA DE CHATBOT
-                          IconButton(
-                            onPressed: () async {
-                              String res =
-                                  await _chatbotAPI.delete(chats[index].id);
-
-                              if (res != "200 OK") {
-                                showErrorDialog(
-                                  context,
-                                  "Error Trying To Delete ChatBot ${chats[index].name}:",
-                                  res,
-                                );
-                                return;
-                              }
-
-                              setState(() {
-                                chats.removeAt(index);
-                              });
-                            },
-                            icon: const Icon(Icons.delete),
-                          ),
-                        ],
-                      ),
                     );
                   },
                 ),
@@ -111,13 +81,6 @@ class _HomePageState extends State<HomePage> {
       context: context,
       barrierDismissible: false,
       builder: (context) => const NewChatbotWidget(),
-    ).then((_) {
-      if (_controller.model != null) {
-        Get.toNamed(
-          "/chat_page",
-          arguments: ChatbotPageArguments(_controller.model!.id)
-        );
-      }
-    });
+    );
   }
 }
