@@ -9,31 +9,43 @@ class ChatbotPageArguments {
   ChatbotPageArguments(this.id);
 }
 
-class ChatbotPage extends StatefulWidget {
+class ChatBotPage extends StatefulWidget {
   final ChatbotPageArguments arguments;
-  const ChatbotPage(this.arguments, {Key? key}) : super(key: key);
+  const ChatBotPage(this.arguments, {Key? key}) : super(key: key);
   static const routeName = "/chat_page";
 
   @override
-  State<ChatbotPage> createState() => _ChatbotPageState();
+  State<ChatBotPage> createState() => _ChatBotPageState();
 }
 
-class _ChatbotPageState extends State<ChatbotPage> {
+class _ChatBotPageState extends State<ChatBotPage> {
   final ChatBotPageController _controller = Get.put(ChatBotPageController());
 
   @override
+  void initState() {
+    _controller.init(widget.arguments.id);
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    if (_controller.chatBotModel == null) {
-      _controller.init(widget.arguments.id).then(
-        (value) {
-          setState(() {});
-        },
-      );
-    }
+    TextEditingController nameController = TextEditingController();
 
     return Scaffold(
       appBar: AppBar(
-        title: TitleWidget(_controller.chatBotModel?.name ?? ""),
+        title: Obx(() {
+          nameController.text = _controller.chatBotModel.value.name;
+          return TitleWidget(
+            textController: nameController,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return "Required Field";
+              }
+              return null;
+            },
+            onChange: (newName) => _controller.setChatBotName(newName),
+          );
+        }),
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),

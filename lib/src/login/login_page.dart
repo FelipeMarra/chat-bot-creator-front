@@ -2,8 +2,6 @@ import 'package:chat_bot_creator/api/api.dart';
 import 'package:chat_bot_creator/api/models/login_model.dart';
 import 'package:chat_bot_creator/api/models/user_model.dart';
 import 'package:chat_bot_creator/api/user_api.dart';
-import 'package:chat_bot_creator/src/home/home_page.dart';
-import 'package:chat_bot_creator/src/registration/registration_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

@@ -1,4 +1,3 @@
-import 'package:chat_bot_creator/api/api.dart';
 import 'package:chat_bot_creator/src/chatbot/chatbot_page.dart';
 import 'package:chat_bot_creator/src/home/home_page.dart';
 import 'package:chat_bot_creator/src/landing_page.dart';
@@ -25,8 +24,8 @@ class MyApp extends StatelessWidget {
             page: () => const RegistrationPage()),
         GetPage(name: HomePage.routeName, page: () => const HomePage()),
         GetPage(
-          name: ChatbotPage.routeName,
-          page: () => ChatbotPage(Get.arguments),
+          name: ChatBotPage.routeName,
+          page: () => ChatBotPage(Get.arguments),
         ),
       ],
     );

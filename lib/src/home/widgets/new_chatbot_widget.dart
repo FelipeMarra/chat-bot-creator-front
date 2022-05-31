@@ -58,9 +58,8 @@ class _NewChatbotWidgetState extends State<NewChatbotWidget> {
 
                       _formKey.currentState?.save();
 
-                      await _chatbotAPI.createChatBot(_name);
+                      _controller.model = await _chatbotAPI.createChatBot(_name);
 
-                      _controller.newChatStatus = "created"; 
                       Get.back();
                     },
                     child: const Text("Create"),
@@ -68,7 +67,6 @@ class _NewChatbotWidgetState extends State<NewChatbotWidget> {
                   const SizedBox(width: 15),
                   OutlinedButton(
                     onPressed: () {
-                      _controller.newChatStatus = "canceled";
                       Get.back();
                     },
                     child: const Text("Cancel"),

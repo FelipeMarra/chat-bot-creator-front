@@ -4,9 +4,9 @@ import 'package:dio/dio.dart';
 
 class ChatBotModel {
   final int id;
-  final String name;
+  String name;
   final String shareLink;
-  final String initialState;
+  String initialState;
   final DioError? error;
 
   ChatBotModel({

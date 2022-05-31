@@ -56,7 +56,7 @@ class _HomePageState extends State<HomePage> {
                     return ListTile(
                       onTap: () => Get.toNamed(
                         "/chat_page",
-                        arguments: ChatbotPageArguments(index + 1),
+                        arguments: ChatbotPageArguments(chats[index].id),
                       ),
                       leading: const Icon(Icons.chat),
                       title: Text(chats[index].name),
@@ -112,10 +112,10 @@ class _HomePageState extends State<HomePage> {
       barrierDismissible: false,
       builder: (context) => const NewChatbotWidget(),
     ).then((_) {
-      if (_controller.newChatStatus == "created") {
+      if (_controller.model != null) {
         Get.toNamed(
           "/chat_page",
-          arguments: ChatbotPageArguments(chats.length + 1),
+          arguments: ChatbotPageArguments(_controller.model!.id)
         );
       }
     });
