@@ -2,6 +2,7 @@ import 'package:chat_bot_creator/api/api.dart';
 import 'package:chat_bot_creator/api/chat_bot_api.dart';
 import 'package:chat_bot_creator/api/models/chat_model.dart';
 import 'package:chat_bot_creator/src/chatbot/chatbot_page.dart';
+import 'package:chat_bot_creator/src/home/home_page_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -18,6 +19,8 @@ class _NewChatbotWidgetState extends State<NewChatbotWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final HomePageController _controller = Get.find();
+
     ChatBotAPI _chatbotAPI = Get.find<API>().chatbot;
 
     return Dialog(
@@ -61,10 +64,12 @@ class _NewChatbotWidgetState extends State<NewChatbotWidget> {
                       ChatBotModel model =
                           await _chatbotAPI.createChatBot(_name);
 
-                      Get.offAllNamed(
+                      Get.offNamed(
                         "/chat_page",
-                        predicate: (route) => Get.currentRoute == "/home_page",
                         arguments: ChatbotPageArguments(model.id),
+                      )!
+                          .then(
+                        (value) => _controller.reloadChats(),
                       );
                     },
                     child: const Text("Create"),
