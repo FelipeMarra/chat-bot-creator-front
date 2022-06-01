@@ -21,8 +21,8 @@ class ChatBotModel {
     return {
       'id': id,
       'name': name,
-      'shareLink': shareLink,
-      'initialState': initialState,
+      'share_link': shareLink,
+      'initial_state': initialState,
     };
   }
 

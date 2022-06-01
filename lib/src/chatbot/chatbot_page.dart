@@ -38,15 +38,18 @@ class _ChatBotPageState extends State<ChatBotPage> {
       appBar: AppBar(
         title: _titleWidget(),
         actions: [
+          const SizedBox(
+            width: 20,
+          ),
           IconButton(
             onPressed: () async {
-              String res = await _chatbotAPI.delete(widget.arguments.id);
+              int res = await _chatbotAPI.delete(widget.arguments.id);
 
-              if (res != "200 OK") {
+              if (res != 200) {
                 showErrorDialog(
                   context,
                   "Error Trying To Delete ChatBot ${widget.arguments.id}:",
-                  res,
+                  "Status: $res",
                 );
                 return;
               }
@@ -55,10 +58,36 @@ class _ChatBotPageState extends State<ChatBotPage> {
             },
             icon: const Icon(Icons.delete),
           ),
+          const SizedBox(
+            width: 20,
+          ),
+          IconButton(
+            onPressed: () async {
+              int res =
+                  await _chatbotAPI.update(_controller.chatBotModel.value);
+
+              if (res != 200) {
+                showErrorDialog(
+                  context,
+                  "Error Trying To Update ChatBot ${widget.arguments.id}:",
+                  "Status: $res",
+                );
+                return;
+              }
+
+              Get.snackbar(
+                "You ChatBot was updated",
+                "",
+                snackPosition: SnackPosition.BOTTOM,
+              );
+            },
+            icon: const Icon(Icons.save),
+          ),
         ],
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
+      //TODO initial state: tem q pegar todos os estados e mostrar p poder escolher qual vai ser o inicial
     );
   }
 

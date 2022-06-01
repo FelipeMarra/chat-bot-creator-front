@@ -15,12 +15,11 @@ class TitleWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          TextFormField(
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Flexible(
+          child: TextFormField(
             controller: textController,
             initialValue: name,
             decoration: const InputDecoration(
@@ -29,8 +28,9 @@ class TitleWidget extends StatelessWidget {
             validator: (value) => validator(value),
             onChanged: (value) => onChange(value),
           ),
-        ],
-      ),
+        ),
+        Flexible(child: Container()),
+      ],
     );
   }
 }

@@ -42,7 +42,16 @@ class ChatBotAPI {
     return ChatBotModel.fromMap(res.data);
   }
 
-  Future delete(int id) async {
+  Future<int> update(ChatBotModel newModel) async {
+    Response res = await _dio.post(
+      chatbotRout + "/update/${newModel.id}",
+      data: newModel.toMap(),
+    );
+
+    return res.data;
+  }
+
+  Future<int> delete(int id) async {
     Response res = await _dio.delete(
       chatbotRout + "/delete/$id",
     );
