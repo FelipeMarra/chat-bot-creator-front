@@ -1,5 +1,7 @@
 import 'package:chat_bot_creator/api/api.dart';
 import 'package:chat_bot_creator/api/chat_bot_api.dart';
+import 'package:chat_bot_creator/src/chatbot/widgets/state_base/new_state_base_widget.dart';
+import 'package:chat_bot_creator/src/chatbot/widgets/state_base/state_base_widget.dart';
 import 'package:chat_bot_creator/src/chatbot/widgets/title_widget.dart';
 import 'package:chat_bot_creator/src/widgets/error_dialog.dart';
 import 'package:flutter/material.dart';
@@ -35,75 +37,108 @@ class _ChatBotPageState extends State<ChatBotPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: _titleWidget(),
-        actions: [
-          const SizedBox(
-            width: 20,
+      appBar: _appBar(),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: SingleChildScrollView(
+          physics: const ScrollPhysics(),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const Text("States:"),
+              Obx(
+                () {
+                  //TODO fazer o modelo ser reativo????? 
+                  print("BUILD WITH ${_controller.states.length} STATES");
+                  return _controller.isReady.value
+                      ? ListView.builder(
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount:
+                              _controller.chatBotModel.value.states.length,
+                          itemBuilder: (context, index) {
+                            return StateBaseWidget(index);
+                          },
+                        )
+                      : const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                },
+              ),
+            ],
           ),
-          IconButton(
-            onPressed: () async {
-              int res = await _chatbotAPI.delete(widget.arguments.id);
-
-              if (res != 200) {
-                showErrorDialog(
-                  context,
-                  "Error Trying To Delete ChatBot ${widget.arguments.id}:",
-                  "Status: $res",
-                );
-                return;
-              }
-
-              Get.back();
-            },
-            icon: const Icon(Icons.delete),
-          ),
-          const SizedBox(
-            width: 20,
-          ),
-          IconButton(
-            onPressed: () async {
-              int res =
-                  await _chatbotAPI.update(_controller.chatBotModel.value);
-
-              if (res != 200) {
-                showErrorDialog(
-                  context,
-                  "Error Trying To Update ChatBot ${widget.arguments.id}:",
-                  "Status: $res",
-                );
-                return;
-              }
-
-              Get.snackbar(
-                "You ChatBot was updated",
-                "",
-                snackPosition: SnackPosition.BOTTOM,
-              );
-            },
-            icon: const Icon(Icons.save),
-          ),
-        ],
-        backgroundColor: Colors.transparent,
-        elevation: 0,
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.add),
+        backgroundColor: Colors.grey[100],
+        onPressed: () {
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (context) => NewStateBaseWidget(widget.arguments.id),
+          );
+        },
       ),
       //TODO initial state: tem q pegar todos os estados e mostrar p poder escolher qual vai ser o inicial
     );
   }
 
-  Obx _titleWidget() {
-    return Obx(() {
-      nameController.text = _controller.chatBotModel.value.name;
-      return TitleWidget(
-        textController: nameController,
-        validator: (value) {
-          if (value == null || value.isEmpty) {
-            return "Required Field";
-          }
-          return null;
-        },
-        onChange: (newName) => _controller.setChatBotName(newName),
-      );
-    });
+  _appBar() {
+    return AppBar(
+      title: Obx(() {
+        String name = _controller.chatBotModel.value.name;
+        return name.isNotEmpty ? TitleWidget(name: name) : Container();
+      }),
+      actions: [
+        const SizedBox(
+          width: 20,
+        ),
+        IconButton(
+          onPressed: () async {
+            int res = await _chatbotAPI.delete(widget.arguments.id);
+
+            if (res != 200) {
+              showErrorDialog(
+                context,
+                "Error Trying To Delete ChatBot ${widget.arguments.id}:",
+                "Status: $res",
+              );
+              return;
+            }
+
+            Get.back();
+          },
+          icon: const Icon(Icons.delete),
+        ),
+        const SizedBox(
+          width: 20,
+        ),
+        IconButton(
+          onPressed: () async {
+            int res = await _chatbotAPI.update(_controller.chatBotModel.value);
+
+            if (res != 200) {
+              showErrorDialog(
+                context,
+                "Error Trying To Update ChatBot ${widget.arguments.id}:",
+                "Status: $res",
+              );
+              return;
+            }
+
+            Get.snackbar(
+              "You ChatBot was updated",
+              "",
+              snackPosition: SnackPosition.BOTTOM,
+            );
+          },
+          icon: const Icon(Icons.save),
+        ),
+      ],
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+    );
   }
 }

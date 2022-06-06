@@ -2,14 +2,10 @@ import 'package:flutter/material.dart';
 
 class TitleWidget extends StatelessWidget {
   final String? name;
-  final void Function(String value) onChange;
-  final String? Function(String? value) validator;
-  final TextEditingController textController;
+  final void Function(String value)? onChange;
   const TitleWidget({
     this.name,
-    required this.onChange,
-    required this.validator,
-    required this.textController,
+    this.onChange,
     Key? key,
   }) : super(key: key);
 
@@ -20,13 +16,21 @@ class TitleWidget extends StatelessWidget {
       children: [
         Flexible(
           child: TextFormField(
-            controller: textController,
             initialValue: name,
             decoration: const InputDecoration(
               label: Text("Chatbot name"),
             ),
-            validator: (value) => validator(value),
-            onChanged: (value) => onChange(value),
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return "Required Field";
+              }
+              return null;
+            },
+            onChanged: (value) {
+              if (onChange != null) {
+                onChange!(value);
+              }
+            },
           ),
         ),
         Flexible(child: Container()),

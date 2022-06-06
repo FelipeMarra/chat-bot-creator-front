@@ -1,5 +1,6 @@
 import 'package:chat_bot_creator/api/chat_bot_api.dart';
 import 'package:chat_bot_creator/api/services/login_service.dart';
+import 'package:chat_bot_creator/api/states_api.dart';
 import 'package:chat_bot_creator/api/user_api.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
@@ -11,6 +12,7 @@ class API extends ChangeNotifier {
   late LoginService _loginService;
   late UserAPI user;
   late ChatBotAPI chatbot;
+  late StatesAPI statesAPI;
 
   bool initiated = false;
 
@@ -30,6 +32,8 @@ class API extends ChangeNotifier {
     await user.init();
 
     chatbot = ChatBotAPI(_dio);
+
+    statesAPI = StatesAPI(_dio);
 
     initiated = true;
     notifyListeners();

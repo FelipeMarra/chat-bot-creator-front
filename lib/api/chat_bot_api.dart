@@ -6,13 +6,13 @@ class ChatBotAPI {
 
   ChatBotAPI(this._dio);
 
-  static const String chatbotRout = "/chatbot";
+  static const String baseRout = "/chatbot";
 
   Future<ChatBotModel> createChatBot(String name) async {
     Response res;
     try {
       res = await _dio.post(
-        chatbotRout + "/create",
+        baseRout + "/create",
         data: {"name": name},
       );
     } on DioError catch (e) {
@@ -29,7 +29,7 @@ class ChatBotAPI {
   }
 
   Future<List<ChatBotModel>> getAll() async {
-    Response res = await _dio.get(chatbotRout + "/all");
+    Response res = await _dio.get(baseRout + "/all");
 
     return List<ChatBotModel>.from(
       res.data?.map((x) => ChatBotModel.fromMap(x)),
@@ -37,14 +37,14 @@ class ChatBotAPI {
   }
 
   Future<ChatBotModel> getById(int id) async {
-    Response res = await _dio.get(chatbotRout + "/$id");
+    Response res = await _dio.get(baseRout + "/$id");
 
     return ChatBotModel.fromMap(res.data);
   }
 
   Future<int> update(ChatBotModel newModel) async {
     Response res = await _dio.post(
-      chatbotRout + "/update/${newModel.id}",
+      baseRout + "/update/${newModel.id}",
       data: newModel.toMap(),
     );
 
@@ -53,7 +53,7 @@ class ChatBotAPI {
 
   Future<int> delete(int id) async {
     Response res = await _dio.delete(
-      chatbotRout + "/delete/$id",
+      baseRout + "/delete/$id",
     );
 
     return res.data;

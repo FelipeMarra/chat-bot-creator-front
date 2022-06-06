@@ -14,15 +14,15 @@ class NewChatbotWidget extends StatefulWidget {
 }
 
 class _NewChatbotWidgetState extends State<NewChatbotWidget> {
+  final HomePageController _controller = Get.find();
+  final ChatBotAPI _chatbotAPI = Get.find<API>().chatbot;
+
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   String _name = "";
 
   @override
   Widget build(BuildContext context) {
-    final HomePageController _controller = Get.find();
-
-    ChatBotAPI _chatbotAPI = Get.find<API>().chatbot;
-
     return Dialog(
       child: Form(
         key: _formKey,

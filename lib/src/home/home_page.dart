@@ -29,15 +29,17 @@ class HomePage extends StatelessWidget {
           () => Padding(
             padding: const EdgeInsets.all(8.0),
             child: _controller.chats.isEmpty
-                ? Container()
+                ? const Center(
+                    child: CircularProgressIndicator(),
+                  )
                 : ListView.builder(
                     itemCount: _controller.chats.length,
                     itemBuilder: (context, index) {
                       return ListTile(
                         onTap: () => Get.toNamed(
                           "/chat_page",
-                          arguments: ChatbotPageArguments(
-                              _controller.chats[index].id),
+                          arguments:
+                              ChatbotPageArguments(_controller.chats[index].id),
                         )!
                             .then(
                           (value) => _controller.reloadChats(),
