@@ -1,28 +1,40 @@
 import 'package:chat_bot_creator/api/models/states_models.dart';
 import 'package:chat_bot_creator/src/chatbot/controller/chat_bot_page_controller.dart';
-import 'package:chat_bot_creator/src/chatbot/widgets/state_base/new_message_widget.dart';
-import 'package:chat_bot_creator/src/chatbot/widgets/state_base/new_transition_widget.dart';
+import 'package:chat_bot_creator/src/chatbot/widgets/state_base/create/new_message_widget.dart';
+import 'package:chat_bot_creator/src/chatbot/widgets/state_base/create/new_transition_widget.dart';
+import 'package:chat_bot_creator/src/chatbot/widgets/state_base/update/new_message_widget.dart';
+import 'package:chat_bot_creator/src/chatbot/widgets/state_base/update/update_transition_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class NewStateBaseWidget extends StatefulWidget {
-  final int chatbotId;
-  const NewStateBaseWidget(this.chatbotId, {Key? key}) : super(key: key);
-
+class UpdateStateBaseWidget extends StatefulWidget {
+  final StateBaseModel model;
+  const UpdateStateBaseWidget(this.model, {Key? key}) : super(key: key);
   @override
-  State<NewStateBaseWidget> createState() => _NewStateBaseWidgetState();
+  State<UpdateStateBaseWidget> createState() => _UpdateStateBaseWidgetState();
 }
 
-class _NewStateBaseWidgetState extends State<NewStateBaseWidget> {
-  final ChatBotPageController _chatController =
-      Get.find<ChatBotPageController>();
+class _UpdateStateBaseWidgetState extends State<UpdateStateBaseWidget> {
+  final ChatBotPageController _chatController = Get.find();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  int stateId = -1;
-  String _name = "";
-  final List<NewTransitionWidget> _transitionsWidgets = [];
-  final List<NewMessageWidget> _messagesWidgets = [];
+  final List<UpdateTransitionWidget> _transitionsWidgets = [];
+  final List<UpdateMessageWidget> _messagesWidgets = [];
+
+  final List<NewTransitionWidget> _newTransitionsWidgets = [];
+  final List<NewMessageWidget> _newMessagesWidgets = [];
+
+  @override
+  void initState() {
+    for (StateTransitionModel t in widget.model.transitions) {
+      _transitionsWidgets.add(UpdateTransitionWidget(t));
+    }
+    for (StateMessageModel m in widget.model.messages) {
+      _messagesWidgets.add(UpdateMessageWidget(m));
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,10 +44,11 @@ class _NewStateBaseWidgetState extends State<NewStateBaseWidget> {
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
               //Name
               TextFormField(
-                initialValue: _name,
+                initialValue: widget.model.name,
                 decoration: const InputDecoration(
                   label: Text("State name"),
                 ),
@@ -46,40 +59,44 @@ class _NewStateBaseWidgetState extends State<NewStateBaseWidget> {
                   return null;
                 },
                 onChanged: (value) {
-                  _name = value;
+                  widget.model.name = value;
                 },
               ),
               const SizedBox(height: 15),
               const Text("Messages"),
               Column(
-                children: _messagesWidgets,
+                children: [
+                  ..._messagesWidgets,
+                  ..._newMessagesWidgets,
+                ],
               ),
               const SizedBox(height: 15),
               OutlinedButton(
                 onPressed: () {
                   setState(() {
-                    _messagesWidgets.add(NewMessageWidget());
+                    _newMessagesWidgets.add(NewMessageWidget());
                   });
                 },
-                child: const Text("Add Transition"),
+                child: const Text("Add Message"),
               ),
-              const SizedBox(height: 15),
               const Text("Transitions"),
               Column(
-                children: _transitionsWidgets,
+                children: [
+                  ..._transitionsWidgets,
+                  ..._newTransitionsWidgets,
+                ],
               ),
               const SizedBox(height: 15),
               OutlinedButton(
                 onPressed: () {
                   setState(() {
-                    _transitionsWidgets.add(NewTransitionWidget());
+                    _newTransitionsWidgets.add(NewTransitionWidget());
                   });
                 },
                 child: const Text("Add Transition"),
               ),
               const SizedBox(height: 15),
               Row(
-                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   OutlinedButton(
                     onPressed: () async {
@@ -92,35 +109,20 @@ class _NewStateBaseWidgetState extends State<NewStateBaseWidget> {
 
                       _formKey.currentState?.save();
 
-                      //Get messages
-                      List<StateMessageModel> messages = [];
-
-                      for (NewMessageWidget m in _messagesWidgets) {
-                        messages.add(m.messageModel);
+                      for (NewMessageWidget m in _newMessagesWidgets) {
+                        widget.model.messages.add(m.messageModel);
                       }
 
-                      //Get transitions
-                      List<StateTransitionModel> transitions = [];
-
-                      for (NewTransitionWidget t in _transitionsWidgets) {
-                        transitions.add(t.transitionModel);
+                      for (NewTransitionWidget t in _newTransitionsWidgets) {
+                        widget.model.transitions.add(t.transitionModel);
                       }
 
-                      StateBaseModel newState = StateBaseModel(
-                        id: -1,
-                        chatbotId: widget.chatbotId,
-                        name: _name,
-                        stateType: "dumb",
-                        messages: messages,
-                        transitions: transitions,
-                      );
-
-                      _chatController.createState(newState);
+                      _chatController.updateState(widget.model);
 
                       Get.back();
                     },
                     //TODO manda p criar mesmo invalido?
-                    child: const Text("Create"),
+                    child: const Text("Update"),
                   ),
                   const SizedBox(width: 15),
                   OutlinedButton(
@@ -130,7 +132,7 @@ class _NewStateBaseWidgetState extends State<NewStateBaseWidget> {
                     child: const Text("Cancel"),
                   ),
                 ],
-              ),
+              )
             ],
           ),
         ),

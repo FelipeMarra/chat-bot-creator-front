@@ -1,5 +1,6 @@
 import 'package:chat_bot_creator/api/models/states_models.dart';
 import 'package:chat_bot_creator/src/chatbot/controller/chat_bot_page_controller.dart';
+import 'package:chat_bot_creator/src/chatbot/widgets/state_base/update/update_state_base_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -29,7 +30,11 @@ class StateBaseWidget extends StatelessWidget {
             children: [
               const Divider(),
               ListTile(
-                //onTap: () => ,
+                onTap: () => showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (context) => UpdateStateBaseWidget(model),
+                ),
                 //leading: const Icon(Icons.state),
                 title: Text(model.name),
                 subtitle: Column(

@@ -1,24 +1,21 @@
 import 'package:chat_bot_creator/api/models/states_models.dart';
 import 'package:flutter/material.dart';
 
-class NewTransitionWidget extends StatelessWidget {
-  NewTransitionWidget({Key? key}) : super(key: key);
-
-  final StateTransitionModel transitionModel = StateTransitionModel(
-    id: -1,
-    stateId: -1,
-    transitionTo: -1,
-  );
+class UpdateMessageWidget extends StatelessWidget {
+  final StateMessageModel model;
+  const UpdateMessageWidget(this.model, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final StateMessageModel messageModel = model;
+
     //TODO check if will be validated
     return Column(
       children: [
-        //TODO show only the states that are present in the bot
         TextFormField(
+          initialValue: model.message,
           decoration: const InputDecoration(
-            label: Text("Transitino To"),
+            label: Text("Your Message"),
           ),
           validator: (value) {
             if (value == null || value.isEmpty) {
@@ -27,7 +24,7 @@ class NewTransitionWidget extends StatelessWidget {
             return null;
           },
           onChanged: (value) {
-            transitionModel.transitionTo = int.parse(value);
+            messageModel.message = value;
           },
         ),
       ],

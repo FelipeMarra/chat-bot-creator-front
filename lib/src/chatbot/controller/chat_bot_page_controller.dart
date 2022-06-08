@@ -25,14 +25,30 @@ class ChatBotPageController extends GetxController {
     _chatBotModel.value.name = newName;
   }
 
-  void createState(StateBaseModel newState) async {
+  Future<void> createState(StateBaseModel newState) async {
     newState = await _statesAPI.createStateBase(newState);
     _chatBotModel.update((oldChat) {
       oldChat!.states = [...oldChat.states, newState];
     });
   }
 
-  void deleteState(StateBaseModel state) async {
+  //TODO update não remove nem adiciona, apenas modifica os já existentes
+  Future<void> updateState(StateBaseModel stateToUpdate) async {
+    await _statesAPI.update(stateToUpdate);
+
+    //UI update
+    List<StateBaseModel> newStates = _chatBotModel.value.states;
+    int index = _chatBotModel.value.states.indexWhere(
+      (element) => element.id == stateToUpdate.id,
+    );
+    newStates[index] = stateToUpdate;
+    _chatBotModel.update((oldChat) {
+      oldChat!.states = newStates;
+    });
+  }
+
+  //TODO problema no back
+  Future<void> deleteState(StateBaseModel state) async {
     await _statesAPI.delete(state.id);
     _chatBotModel.value.states.removeWhere((element) => element.id == state.id);
   }

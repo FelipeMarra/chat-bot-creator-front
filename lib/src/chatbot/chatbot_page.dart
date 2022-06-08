@@ -1,6 +1,6 @@
 import 'package:chat_bot_creator/api/api.dart';
 import 'package:chat_bot_creator/api/chat_bot_api.dart';
-import 'package:chat_bot_creator/src/chatbot/widgets/state_base/new_state_base_widget.dart';
+import 'package:chat_bot_creator/src/chatbot/widgets/state_base/create/new_state_base_widget.dart';
 import 'package:chat_bot_creator/src/chatbot/widgets/state_base/state_base_widget.dart';
 import 'package:chat_bot_creator/src/chatbot/widgets/title_widget.dart';
 import 'package:chat_bot_creator/src/widgets/error_dialog.dart';
