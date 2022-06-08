@@ -1,6 +1,4 @@
-import 'package:chat_bot_creator/api/api.dart';
 import 'package:chat_bot_creator/api/models/states_models.dart';
-import 'package:chat_bot_creator/api/states_api.dart';
 import 'package:chat_bot_creator/src/chatbot/controller/chat_bot_page_controller.dart';
 import 'package:chat_bot_creator/src/chatbot/widgets/state_base/new_message_widget.dart';
 import 'package:chat_bot_creator/src/chatbot/widgets/state_base/new_transition_widget.dart';
@@ -16,7 +14,6 @@ class NewStateBaseWidget extends StatefulWidget {
 }
 
 class _NewStateBaseWidgetState extends State<NewStateBaseWidget> {
-  final StatesAPI _statesAPI = Get.find<API>().statesAPI;
   final ChatBotPageController _chatController =
       Get.find<ChatBotPageController>();
 
@@ -113,16 +110,16 @@ class _NewStateBaseWidgetState extends State<NewStateBaseWidget> {
                         id: -1,
                         chatbotId: widget.chatbotId,
                         name: _name,
+                        stateType: "dumb",
                         messages: messages,
                         transitions: transitions,
                       );
 
-                      newState = await _statesAPI.createStateBase(newState);
-
-                      _chatController.addState(newState);
+                      _chatController.createState(newState);
 
                       Get.back();
                     },
+                    //TODO manda p criar mesmo invalido?
                     child: const Text("Create"),
                   ),
                   const SizedBox(width: 15),

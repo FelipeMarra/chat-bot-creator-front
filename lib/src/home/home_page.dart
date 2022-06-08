@@ -28,11 +28,8 @@ class HomePage extends StatelessWidget {
         body: Obx(
           () => Padding(
             padding: const EdgeInsets.all(8.0),
-            child: _controller.chats.isEmpty
-                ? const Center(
-                    child: CircularProgressIndicator(),
-                  )
-                : ListView.builder(
+            child: _controller.isReady.value
+                ?  ListView.builder(
                     itemCount: _controller.chats.length,
                     itemBuilder: (context, index) {
                       return ListTile(
@@ -59,6 +56,9 @@ class HomePage extends StatelessWidget {
                         ),
                       );
                     },
+                  )
+                : const Center(
+                    child: CircularProgressIndicator(),
                   ),
           ),
         ),

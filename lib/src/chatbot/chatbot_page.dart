@@ -49,8 +49,6 @@ class _ChatBotPageState extends State<ChatBotPage> {
               const Text("States:"),
               Obx(
                 () {
-                  //TODO fazer o modelo ser reativo????? 
-                  print("BUILD WITH ${_controller.states.length} STATES");
                   return _controller.isReady.value
                       ? ListView.builder(
                           physics: const NeverScrollableScrollPhysics(),
@@ -58,7 +56,7 @@ class _ChatBotPageState extends State<ChatBotPage> {
                           itemCount:
                               _controller.chatBotModel.value.states.length,
                           itemBuilder: (context, index) {
-                            return StateBaseWidget(index);
+                            return StateBaseWidget(_controller.chatBotModel.value.states[index]);
                           },
                         )
                       : const Center(

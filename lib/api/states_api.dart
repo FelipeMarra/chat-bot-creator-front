@@ -20,6 +20,7 @@ class StatesAPI {
         name: "",
         id: -1,
         chatbotId: -1,
+        stateType: "",
         messages: [],
         transitions: [],
         error: e,

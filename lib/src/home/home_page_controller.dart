@@ -12,12 +12,15 @@ class HomePageController extends GetxController {
 
   RxList<ChatBotModel> chats = <ChatBotModel>[].obs;
 
+  RxBool isReady = false.obs;
+
   reloadChats() async {
     if (chats.isNotEmpty) {
       chats.clear();
     }
     _chatbotAPI.getAll().then((newList) {
       chats.addAll(newList);
+      isReady.value = true;
     });
   }
 

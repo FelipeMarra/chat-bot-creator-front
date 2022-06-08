@@ -1,22 +1,25 @@
 import 'dart:convert';
-
 import 'package:dio/dio.dart';
+//import 'package:get/get.dart';
 
 class StateBaseModel {
   int id;
-  String name;
   int chatbotId;
+  String stateType;
+  String name;
   List<StateMessageModel> messages;
   List<StateTransitionModel> transitions;
   final DioError? error;
 
-  StateBaseModel(
-      {required this.id,
-      required this.chatbotId,
-      required this.name,
-      required this.messages,
-      required this.transitions,
-      this.error});
+  StateBaseModel({
+    required this.id,
+    required this.chatbotId,
+    required this.stateType,
+    required this.name,
+    required this.messages,
+    required this.transitions,
+    this.error,
+  });
 
   bool get hasError => error != null;
 
@@ -33,8 +36,9 @@ class StateBaseModel {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'name': name,
       'chatbot_id': chatbotId,
+      'state_type': stateType,
+      'name': name,
       'messages': messages.map((x) => x.toMap()).toList(),
       'transitions': transitions.map((x) => x.toMap()).toList(),
     };
@@ -43,8 +47,9 @@ class StateBaseModel {
   factory StateBaseModel.fromMap(Map<String, dynamic> map) {
     return StateBaseModel(
       id: map['id']?.toInt() ?? -1,
-      name: map['name'] ?? '',
       chatbotId: map['chatbot_id']?.toInt() ?? -1,
+      stateType: map['state_type'] ?? '',
+      name: map['name'] ?? '',
       messages: List<StateMessageModel>.from(
           map['messages']?.map((x) => StateMessageModel.fromMap(x))),
       transitions: List<StateTransitionModel>.from(
@@ -62,13 +67,13 @@ class StateMessageModel {
   int id;
   int stateId;
   String message;
-  String typeMessage;
+  String messageType;
 
   StateMessageModel({
     required this.id,
     required this.stateId,
     required this.message,
-    required this.typeMessage,
+    required this.messageType,
   });
 
   Map<String, dynamic> toMap() {
@@ -76,7 +81,7 @@ class StateMessageModel {
       'id': id,
       'state_id': stateId,
       'message': message,
-      'type_message': typeMessage,
+      'message_type': messageType,
     };
   }
 
@@ -85,7 +90,7 @@ class StateMessageModel {
       id: map['id']?.toInt() ?? -1,
       stateId: map['state_id']?.toInt() ?? -1,
       message: map['message'] ?? '',
-      typeMessage: map['type_message'] ?? '',
+      messageType: map['message_type'] ?? '',
     );
   }
 

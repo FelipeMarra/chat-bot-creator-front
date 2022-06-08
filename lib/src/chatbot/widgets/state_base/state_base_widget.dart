@@ -4,14 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class StateBaseWidget extends StatelessWidget {
-  final int index;
-  const StateBaseWidget(this.index, {Key? key}) : super(key: key);
+  final StateBaseModel model;
+  const StateBaseWidget(this.model, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final ChatBotPageController _controller = Get.find();
-
-    StateBaseModel model = _controller.states[index];
 
     //TODO: aceitar imagens
     List<Text> messages = [];
@@ -44,6 +42,10 @@ class StateBaseWidget extends StatelessWidget {
                     const Text("Transitions:"),
                     ...tansitions
                   ],
+                ),
+                trailing: IconButton(
+                  onPressed: () => _controller.deleteState(model),
+                  icon: const Icon(Icons.delete),
                 ),
               ),
             ],

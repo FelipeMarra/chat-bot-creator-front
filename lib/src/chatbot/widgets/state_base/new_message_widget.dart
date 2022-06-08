@@ -8,7 +8,7 @@ class NewMessageWidget extends StatelessWidget {
     id: -1,
     stateId: -1,
     message: "",
-    typeMessage: "text",
+    messageType: "text",
   );
 
   @override
